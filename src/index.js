@@ -32,7 +32,10 @@ const store = createStore(
   rootReducer,
   composeEnhancers(applyMiddleware(thunk, sagaMiddleware))
 );
-sagaMiddleware.run(sagaEffects.watchAuthLogout);
+sagaMiddleware.run(sagaEffects.watchAuthEffect);
+sagaMiddleware.run(sagaEffects.watchBurgerBuilderEffect);
+sagaMiddleware.run(sagaEffects.watchContactDataEffect);
+sagaMiddleware.run(sagaEffects.watchOrdersEffect);
 
 const app = (
   <Provider store={store}>

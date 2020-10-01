@@ -6,7 +6,7 @@ import * as fromBurgerBuilderEffects from "./burgerBuilder.effect";
 import * as fromContactDataEffects from "./contactData.effect";
 import * as fromOrdersEffects from "./orders.effect";
 
-export function* watchAuthLogout() {
+export function* watchAuthEffect() {
   yield takeEvery(actionTypes.AUTH_TIMEOUT, fromAuthEffects.authTimeoutEffect);
   yield takeEvery(actionTypes.AUTH_LOGOUT, fromAuthEffects.authLogoutEffect);
   yield takeEvery(actionTypes.AUTH_LOGIN_INIT, fromAuthEffects.authLoginEffect);
@@ -14,14 +14,23 @@ export function* watchAuthLogout() {
     actionTypes.AUTH_CHECK_SESSION,
     fromAuthEffects.authCheckSessionEffect
   );
+}
+
+export function* watchBurgerBuilderEffect() {
   yield takeEvery(
     actionTypes.LOAD_INGREDIENTS_INIT,
     fromBurgerBuilderEffects.loadIngredientEffect
   );
+}
+
+export function* watchContactDataEffect() {
   yield takeEvery(
     actionTypes.CREATE_NEW_ORDER_INIT,
     fromContactDataEffects.createNewOrderEffect
   );
+}
+
+export function* watchOrdersEffect() {
   yield takeEvery(
     actionTypes.LOAD_ORDERS_INIT,
     fromOrdersEffects.loadOrdersEffect
