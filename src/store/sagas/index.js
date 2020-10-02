@@ -1,4 +1,4 @@
-import { takeEvery } from "redux-saga/effects";
+import { takeEvery, takeLatest, all } from "redux-saga/effects";
 
 import * as actionTypes from "../actions/index";
 import * as fromAuthEffects from "./authentication.effect";
@@ -7,13 +7,15 @@ import * as fromContactDataEffects from "./contactData.effect";
 import * as fromOrdersEffects from "./orders.effect";
 
 export function* watchAuthEffect() {
-  yield takeEvery(actionTypes.AUTH_TIMEOUT, fromAuthEffects.authTimeoutEffect);
-  yield takeEvery(actionTypes.AUTH_LOGOUT, fromAuthEffects.authLogoutEffect);
-  yield takeEvery(actionTypes.AUTH_LOGIN_INIT, fromAuthEffects.authLoginEffect);
-  yield takeEvery(
-    actionTypes.AUTH_CHECK_SESSION,
-    fromAuthEffects.authCheckSessionEffect
-  );
+  yield all([
+    takeEvery(actionTypes.AUTH_TIMEOUT, fromAuthEffects.authTimeoutEffect),
+    takeEvery(actionTypes.AUTH_LOGOUT, fromAuthEffects.authLogoutEffect),
+    takeEvery(actionTypes.AUTH_LOGIN_INIT, fromAuthEffects.authLoginEffect),
+    takeEvery(
+      actionTypes.AUTH_CHECK_SESSION,
+      fromAuthEffects.authCheckSessionEffect
+    ),
+  ]);
 }
 
 export function* watchBurgerBuilderEffect() {
@@ -24,7 +26,7 @@ export function* watchBurgerBuilderEffect() {
 }
 
 export function* watchContactDataEffect() {
-  yield takeEvery(
+  yield takeLatest(
     actionTypes.CREATE_NEW_ORDER_INIT,
     fromContactDataEffects.createNewOrderEffect
   );

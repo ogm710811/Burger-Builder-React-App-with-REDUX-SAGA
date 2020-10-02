@@ -1,4 +1,4 @@
-import { delay, put } from "redux-saga/effects";
+import { delay, put, call } from "redux-saga/effects";
 
 import * as fromAuthActions from "../actions";
 import axiosAuthInstance from "../../axios/axios-authentication";
@@ -8,9 +8,10 @@ export function* authLogoutEffect(
   action: fromAuthActions.AuthenticationAction
 ) {
   try {
-    yield localStorage.removeItem("idToken");
-    yield localStorage.removeItem("expirationDate");
-    yield localStorage.removeItem("userId");
+    // example implementation with call([context, fnName], ...args) Saga API
+    yield call([localStorage, "removeItem"], "idToken");
+    yield call([localStorage, "removeItem"], "expirationDate");
+    yield call([localStorage, "removeItem"], "userId");
     yield put(fromAuthActions.authLogoutSuccess());
   } catch (err) {
     yield put(fromAuthActions.authLogoutFail(err));
@@ -45,6 +46,10 @@ const savedSession = (apiResponse) => {
   localStorage.setItem("userId", sessionData.userId);
 };
 
+const authLoginApi = (url, authData) => {
+  return axiosAuthInstance.post(`${url}?key=${API_KEY}`, authData);
+};
+
 export function* authLoginEffect(action: fromAuthActions.AuthenticationAction) {
   const formData = action.payload;
   const authData = {
@@ -57,11 +62,9 @@ export function* authLoginEffect(action: fromAuthActions.AuthenticationAction) {
     : "accounts:signInWithPassword";
   try {
     yield put(fromAuthActions.authLogin());
-    const response = yield axiosAuthInstance.post(
-      `${url}?key=${API_KEY}`,
-      authData
-    );
-    yield savedSession(response.data);
+    // example implementation with call(fn, ...args) Saga API
+    const response = yield call(authLoginApi, url, authData);
+    yield call(savedSession, response.data);
     yield put(fromAuthActions.authLoginSuccess(response.data));
     yield put(fromAuthActions.authLogoutTimeout(response.data));
   } catch (err) {
